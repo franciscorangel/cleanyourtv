@@ -2,6 +2,15 @@
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
 
+> **Este fork: edição Cinema para Sony BRAVIA (Brasil).** Além de tudo do projeto original, traz uma Home nova
+> ([`cinema/`](cinema/README.md)), os botões coloridos e Apps do controle abrindo apps sem root
+> ([`tvkeys/`](tvkeys/README.md)), um app de diagnóstico ([`tvprobe/`](tvprobe/README.md)) e o perfil
+> [`examples/sony-kd-65x755f`](examples/sony-kd-65x755f/README.md). Projeto original:
+> [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) (MIT).
+>
+> *This fork adds a Cinema Home, remote colour-key remapping without root, a TV-provider probe and a Sony
+> KD-65X755F (Brazil) profile on top of the original project.*
+
 <p align="center">
   Read in: <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">正體中文</a> · <a href="README.vi.md">Tiếng Việt</a> · <a href="README.ja.md">日本語</a> · <a href="README.it.md">Italiano</a> · <a href="README.nl.md">Nederlands</a> · <a href="README.de.md">Deutsch</a> · <a href="README.uk.md">Українська</a> · <a href="README.tr.md">Türkçe</a>
 </p>

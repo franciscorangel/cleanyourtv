@@ -1,0 +1,57 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="br.casa.tvkeys" android:versionCode="3" android:versionName="1.2">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <queries>
+        <package android:name="com.google.android.youtube.tv" />
+        <package android:name="com.wbd.stream" />
+        <package android:name="com.globo.globotv" />
+        <package android:name="com.stremio.one" />
+        <package android:name="com.gathin.tvhome" />
+        <package android:name="br.casa.cinema" />
+    </queries>
+    <application android:label="Botões do controle" android:allowBackup="false">
+        <!-- Only offers the key layouts to InputManager; selecting them is done from the shell (LayoutCtl). -->
+        <receiver android:name=".Layouts" android:exported="true" android:permission="android.permission.WRITE_SECURE_SETTINGS">
+            <intent-filter><action android:name="android.hardware.input.action.QUERY_KEYBOARD_LAYOUTS" /></intent-filter>
+            <meta-data android:name="android.hardware.input.metadata.KEYBOARD_LAYOUTS" android:resource="@xml/layouts" />
+        </receiver>
+
+        <!-- One no-display activity per remapped key. Android opens them through the app-launch key categories. -->
+        <activity android:name=".Vermelho" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_CALENDAR" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Verde" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_CONTACTS" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Amarelo" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_CALCULATOR" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Azul" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_EMAIL" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Apps" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_BROWSER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

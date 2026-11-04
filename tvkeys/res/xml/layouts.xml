@@ -1,0 +1,4 @@
+<keyboard-layouts xmlns:android="http://schemas.android.com/apk/res/android">
+    <keyboard-layout android:name="cores" android:label="Botões coloridos e Apps" android:keyboardLayout="@raw/cores" />
+    <keyboard-layout android:name="original" android:label="Botões originais (desfazer)" android:keyboardLayout="@raw/original" />
+</keyboard-layouts>

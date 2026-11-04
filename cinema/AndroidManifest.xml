@@ -1,0 +1,50 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="br.casa.cinema" android:versionCode="1" android:versionName="0.1">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+
+    <!-- Artwork (https posters) and, later, TMDB. Requests start only after Home is on screen. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Continue watching and the apps' channels; granted from the shell (pm grant). -->
+    <uses-permission android:name="android.permission.READ_TV_LISTINGS" />
+    <!-- When each app was last used, to place Stremio's undated titles; granted with `appops set ... GET_USAGE_STATS allow`. -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <!-- "Desinstalar" in an app's menu: hands the app to the TV's own uninstall screen, which asks to confirm. -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
+    <!-- Android 11+ package visibility; harmless on Android 9. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+        </intent>
+    </queries>
+
+    <application android:label="Cinema" android:allowBackup="false" android:hardwareAccelerated="true"
+        android:largeHeap="false" android:supportsRtl="false">
+        <activity android:name=".Home" android:exported="true" android:launchMode="singleTask"
+            android:stateNotNeeded="true" android:clearTaskOnLaunch="true" android:resumeWhilePausing="true"
+            android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode|density|fontScale|locale|layoutDirection"
+            android:theme="@style/Home">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- The remote's colour buttons, forwarded by br.casa.tvkeys: opens the app chosen in Ajustes. Its own empty
+             task affinity keeps the Home task from coming forward on the way. -->
+        <activity android:name=".Botao" android:exported="true" android:noHistory="true" android:excludeFromRecents="true"
+            android:taskAffinity="" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="br.casa.cinema.action.KEY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

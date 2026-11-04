@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="br.casa.tvprobe" android:versionCode="1" android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <!-- Granted from the shell (pm grant). Lets the provider return other apps' rows marked searchable. -->
+    <uses-permission android:name="android.permission.READ_TV_LISTINGS" />
+    <application android:label="Sonda TV" android:allowBackup="false">
+        <activity android:name=".Probe" android:exported="true" android:noHistory="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.NoDisplay" />
+    </application>
+</manifest>

@@ -1,0 +1,9 @@
+# Sony KD-65X755F IR remote (mtkinp_ir_events). Overlay only: every other key keeps the vendor layout.
+# Colour keys and Apps become app-launch keys; Android opens the matching category activity in br.casa.tvkeys.
+type OVERLAY
+
+map key 398 CALENDAR
+map key 399 CONTACTS
+map key 400 CALCULATOR
+map key 401 ENVELOPE
+map key 580 EXPLORER

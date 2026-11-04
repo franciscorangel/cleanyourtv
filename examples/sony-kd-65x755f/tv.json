@@ -1,0 +1,6 @@
+{
+  "tv": "Sony BRAVIA KD-65X755F (BRAVIA_ATV3_4K_BR, MediaTek MT5891), Brasil",
+  "os": "Android TV 9",
+  "brand": "Sony",
+  "notes": "Same S54 build as `sony-kd-55xf8096/`: Samba TV ACR, Sony Select/Discover/promos, recommendation rows, partner auto-installs, Alexa setup, demo mode, Sony/Qterics support agent, bug reports, hotel/pro-mode b2b, help apps; ISDB-T, interactive TV, HDMI-CEC, Chromecast, Ambient Mode, timers and webapi kept. Optional Cinema launcher and remote colour keys: [notes](sony-kd-65x755f/README.md)"
+}

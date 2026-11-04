@@ -1,0 +1,9 @@
+# Reverse overlay: puts the five keys back to the vendor layout (/vendor/usr/keylayout/mtkinp_ir_events.kl).
+# Overlays merge into the live key map, so this is applied before the selection is removed.
+type OVERLAY
+
+map key 398 PROG_RED
+map key 399 PROG_GREEN
+map key 400 PROG_YELLOW
+map key 401 PROG_BLUE
+map key 580 ALL_APPS

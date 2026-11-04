@@ -1,0 +1,70 @@
+# Sony BRAVIA KD-65X755F (BRAVIA_ATV3_4K_BR, MediaTek MT5891), Android TV 9, PTT1.190515.001.S54 672201, Brasil
+# Base: examples/sony-kd-55xf8096 (mesmo build S54), conferida contra uma KD-65X755F em 2026-11.
+# Aplicada em dois lotes, com alguns dias de uso entre eles; os dois lotes estão juntos aqui.
+#
+# Aplicar:  TV_HOST=<ip da TV> tools/disable.sh examples/sony-kd-65x755f/debloat.txt
+# Desfazer: TV_HOST=<ip da TV> tools/restore.sh examples/sony-kd-65x755f/debloat.txt
+# Tudo é DESATIVADO (pm disable-user), nada é desinstalado. Comente qualquer linha que queira manter.
+
+# ---- Lote 1: rastreamento do que passa na tela, anúncios, promoções e modo demonstração
+
+# Rastreamento do que passa na tela (ACR)
+tv.samba.ssm                                    # Samba TV: identifica o que está na tela
+
+# Anúncios e promoções da Sony e do Google na Home
+com.sony.dtv.sonyselect                         # Sony Select: loja/promos
+com.sony.dtv.sonyselect.overlay
+com.sony.dtv.discovery                          # barra Sony Discover (~75 MB em uso)
+com.sony.dtv.tvlaunchercustomizer               # ajustes da Sony nas fileiras da Home original
+com.google.android.tvrecommendations           # fileiras de recomendação da Home original (~77 MB)
+android.autoinstalls.config.sony.bravia        # instalação automática de apps de parceiros
+
+# Configuração da Alexa: roda a cada vez que a TV liga (mantenha se usa Alexa)
+com.sony.dtv.smarthomesettings
+
+# Modo demonstração de loja
+com.sony.dtv.demomode
+com.sony.dtv.demosupport
+com.sony.dtv.multiscreendemo
+
+# ---- Lote 2: telemetria, suporte remoto, modo hotel/profissional e apps sem uso
+
+# Telemetria, suporte remoto e relatórios de erro
+com.sony.dtv.da.service                         # agente de suporte remoto da Sony (coleta uso de apps, energia, áudio)
+com.qterics.da.product                          # kit Qterics usado por esse agente
+com.sony.dtv.sonybugreportsys
+com.sony.dtv.sonyloglevelsettingsys
+com.sony.dtv.sonyloglevelsettingvnd
+com.google.android.tv.bugreportsender
+com.google.android.feedback
+
+# Modo hotel / profissional (mantenha se a TV é controlada por RS-232C ou automação predial, ex.: Control4)
+com.sony.dtv.b2b.hotelmode                      # ~39 MB em uso
+com.sony.dtv.b2b.rs232csupport                  # controle por RS-232C, ~43 MB em uso
+com.sony.dtv.b2b.vendorprotocol                 # anúncio SDDP para Control4, ~41 MB em uso
+
+# Ajuda e manuais
+com.sony.dtv.customersupport
+com.sony.dtv.smarthelp
+com.sony.dtv.imanual
+
+# Apps encerrados ou de pouco uso numa TV
+com.google.android.videos                       # Play Filmes (serviço encerrado). Desativado, o botão Google Play abre a Play Store
+com.google.android.play.games
+com.google.android.marvin.talkback              # leitor de tela: mantenha se alguém precisa de acessibilidade
+com.android.printspooler                        # impressão
+
+# FICAM ATIVOS de propósito:
+# com.sony.dtv.bivlinfo                         # alimenta o Discover, mas também a busca de atualização de firmware
+# com.sony.dtv.scrums.action                    # ~67 MB, função incerta
+# com.sony.dtv.tvx, com.sony.dtv.tvinput.*      # TV aberta e entradas HDMI
+# com.sony.dtv.tuningconfirmation_nondvb        # sintonia ISDB-T (Brasil)
+# com.sony.dtv.interactivetvutil*               # interatividade da TV aberta
+# com.sony.dtv.braviasync*                      # HDMI-CEC
+# com.google.android.apps.mediashell            # Chromecast
+# com.google.android.katniss                    # Assistente / voz
+# com.google.android.tv.remote.service          # controle pelo celular e Google Home
+# com.google.android.backdrop                   # Modo ambiente (porta-retratos)
+# com.sony.dtv.webapi.core, com.sony.dtv.remoteaccess   # controle por IP (Google Home / Home Assistant)
+# com.sony.huey.dlna.*, screnmirroring.com      # DLNA e espelhamento
+# com.sony.dtv.timers                           # temporizador de desligar
