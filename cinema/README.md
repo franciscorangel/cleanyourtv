@@ -5,6 +5,8 @@
 title in focus, and every setting in one side panel. Plain Android views, no Gradle, no Google Play services.
 Pairs with [`tvkeys/`](../tvkeys/README.md) for the remote's colour buttons.*
 
+<p align="center"><img src="../docs/cinema/home.png" alt="Home Cinema" width="800"></p>
+
 Launcher próprio (`br.casa.cinema`), escrito com as views do Android, sem Gradle e sem bibliotecas. Feito e
 testado numa Sony BRAVIA KD-65X755F (Android TV 9); deve funcionar em outras Android TV 8+ que mostram o
 "Assistir a seguir" (Watch Next) dos apps.

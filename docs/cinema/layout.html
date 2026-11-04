@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cinema · layout</title>
+<!--
+  A 1920x1080 replica of the Cinema Home (cinema/), built from the measurements in Home.java and
+  SettingsPanel.java, filled with made-up titles and artwork painted in the page.
+  It exists to make the README images without anybody's watch history or any studio's artwork.
+  Screens: #home  #apps  #ajustes  #botoes  #menu      Render: docs/cinema/render.sh
+-->
+<style>
+  @font-face { font-family: Geist; src: url("../../cinema/assets/fonts/Geist.ttf"); font-weight: 100 900; }
+  :root {
+    --bg: #0A0A0B; --text: #FAFAFA; --text-2: #D4D4D8; --text-3: #A1A1AA; --text-4: #8E8E96;
+    --glow: rgba(232, 232, 240, .28);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  body { font-family: Geist, system-ui, sans-serif; color: var(--text); position: relative; -webkit-font-smoothing: antialiased; }
+
+  #backdrop { position: absolute; inset: 0; }
+  #backdrop canvas { width: 100%; height: 100%; display: block; filter: brightness(1.15) saturate(1.1); }
+  #backdrop::before { content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(90deg, rgba(10,10,11,.94) 0%, rgba(10,10,11,.80) 30%, rgba(10,10,11,.18) 62%, rgba(10,10,11,0) 100%); }
+  #backdrop::after { content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(0deg, #0A0A0B 0%, rgba(10,10,11,.92) 36%, rgba(10,10,11,0) 66%); }
+  .dark #backdrop { opacity: 0; }
+
+  .topshade { position: absolute; left: 0; right: 0; top: 0; height: 200px;
+    background: linear-gradient(rgba(10,10,11,.6), rgba(10,10,11,0)); z-index: 2; }
+
+  header { position: absolute; left: 112px; right: 112px; top: 48px; display: flex; align-items: center; z-index: 3; }
+  .clock { font-size: 30px; font-weight: 300; }
+  .date { font-size: 20px; color: var(--text-3); margin-left: 16px; }
+  .pills { margin-left: auto; display: flex; gap: 14px; }
+  .pill { height: 56px; min-width: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(rgba(255,255,255,.2), rgba(255,255,255,.1)); border: 1.5px solid rgba(255,255,255,.18); }
+  .pill svg { width: 24px; height: 24px; stroke: var(--text); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  #hero { position: absolute; left: 112px; top: 130px; width: 780px; height: 470px; z-index: 3;
+    display: flex; flex-direction: column; justify-content: flex-end; }
+  .dark #hero { display: none; }
+  .appline { display: flex; align-items: center; font-size: 20px; }
+  .appline .app { font-weight: 500; color: var(--text-2); margin-left: 4px; }
+  .appline .kind { color: var(--text-3); margin-left: 10px; }
+  .gdot { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; }
+  .gdot i { width: 10px; height: 10px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px 2px currentColor; }
+  .title { font-size: 84px; font-weight: 300; letter-spacing: -.035em; line-height: 1.12; margin-top: 8px; }
+  .meta { font-size: 22px; color: #C4C4C8; margin-top: 10px; }
+  .desc { font-size: 24px; color: var(--text-2); width: 660px; margin-top: 14px; line-height: 1.55; }
+  .progress { display: flex; align-items: center; margin-top: 14px; }
+  .left { font-size: 19px; color: var(--text-3); margin-left: 14px; }
+  .bar { position: relative; height: 4px; border-radius: 2px; background: rgba(255,255,255,.22); }
+  .bar b { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; color: inherit;
+    background: linear-gradient(90deg, color-mix(in srgb, currentColor 55%, transparent), currentColor);
+    box-shadow: 0 0 10px 1px color-mix(in srgb, currentColor 55%, transparent); }
+  .bar b::after { content: ""; position: absolute; right: -4px; top: -3px; width: 10px; height: 10px; border-radius: 50%;
+    background: radial-gradient(#fff 0 35%, currentColor 60%, transparent 72%); }
+  .hint { display: flex; align-items: center; margin-top: 18px; }
+  .ok { width: 42px; height: 30px; border-radius: 8px; border: 2px solid rgba(250,250,250,.55);
+    font-size: 15px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+  .hint span:not(.ok) { font-size: 18px; color: var(--text-3); margin-left: 12px; }
+
+  #rows { position: absolute; left: 0; right: 0; top: 626px; z-index: 3; }
+  .dark #rows { top: 160px; }
+  .block { margin-bottom: 28px; }
+  .label { font-size: 22px; font-weight: 500; color: #E4E4E7; padding-left: 112px; display: flex; align-items: center; }
+  .label .gdot { width: 24px; height: 24px; margin-right: 4px; margin-left: -6px; }
+  .strip { display: flex; gap: 28px; padding: 16px 112px 12px; }
+
+  .card { width: 320px; flex: none; }
+  .thumb { position: relative; width: 320px; height: 180px; border-radius: 16px; overflow: hidden; background: #1C1C1F;
+    border: 1.5px solid rgba(255,255,255,.12); }
+  .thumb canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .thumb::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(rgba(255,255,255,.06), rgba(255,255,255,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55)); }
+  .badge { position: absolute; left: 12px; top: 12px; z-index: 1; display: flex; align-items: center; gap: 7px;
+    font-size: 15px; font-weight: 500; padding: 5px 12px 5px 10px; border-radius: 999px; background: rgba(10,10,11,.62); }
+  .badge i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .badge { border: 1.5px solid; }
+  .thumb .bar { position: absolute; left: 16px; right: 16px; bottom: 12px; z-index: 1; }
+  .ctitle { font-size: 20px; font-weight: 500; color: var(--text-3); margin-top: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .csub { font-size: 17px; color: var(--text-4); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .focus .thumb { transform: scale(1.07); border: 2.5px solid rgba(250,250,250,.95);
+    box-shadow: 0 0 44px 6px var(--glow), 0 18px 40px rgba(0,0,0,.6); }
+  .focus .ctitle { color: var(--text); margin-top: 22px; }
+  .focus .csub { color: var(--text-3); }
+
+  .grid { padding: 16px 112px 12px; }
+  .line { display: flex; gap: 28px; margin-bottom: 32px; }
+  .tile { width: 256px; }
+  .tile .art { width: 256px; height: 144px; border-radius: 16px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255,255,255,.12);
+    font-size: 30px; font-weight: 600; letter-spacing: -.01em; }
+  .tile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(255,255,255,.10), rgba(255,255,255,0) 45%, rgba(0,0,0,.25)); }
+  .tile .name { font-size: 18px; font-weight: 500; color: var(--text-3); margin-top: 12px; }
+  .tile.focus .art { transform: scale(1.07); border: 2.5px solid rgba(250,250,250,.95); box-shadow: 0 0 40px 6px var(--glow); }
+  .tile.focus .name { color: var(--text); margin-top: 18px; }
+
+  #panel-layer { position: absolute; inset: 0; z-index: 10; display: none; }
+  .panel-open #panel-layer { display: block; }
+  .scrim { position: absolute; inset: 0; background: rgba(10,10,11,.6); }
+  .panel { position: absolute; right: 0; top: 0; bottom: 0; width: 640px; padding: 64px 56px 32px;
+    background: linear-gradient(90deg, #151518, #111113); border-left: 1.5px solid rgba(255,255,255,.12);
+    box-shadow: -24px 0 48px rgba(0,0,0,.45); }
+  .ptitle { font-size: 40px; font-weight: 300; letter-spacing: -.02em; }
+  .pnote { font-size: 18px; color: var(--text-3); margin-top: 10px; }
+  .pcontent { padding-top: 28px; }
+  .section { padding: 36px 0 10px 18px; font-size: 17px; font-weight: 500; color: var(--text-3); letter-spacing: .08em; }
+  .section small { display: block; font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--text-4); margin-top: 6px; }
+  .prow { height: 72px; padding: 0 18px; border-radius: 14px; display: flex; align-items: center; font-size: 22px;
+    color: var(--text-2); border: 1.5px solid transparent; }
+  .prow .grow { flex: 1; }
+  .prow .value { font-size: 20px; color: var(--text-3); margin-right: 12px; }
+  .prow .chev { font-size: 26px; font-weight: 300; color: var(--text-3); }
+  .prow .gdot { width: 24px; height: 24px; margin-right: 12px; }
+  .prow.focus { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.2); color: var(--text); }
+</style>
+</head>
+<body>
+<div id="backdrop"><canvas width="1920" height="1080"></canvas></div>
+<div class="topshade"></div>
+<header>
+  <span class="clock">20:30</span><span class="date">qua, 4 de novembro</span>
+  <div class="pills">
+    <div class="pill"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 4 3.5 3-2.5 4 3.5"/></svg></div>
+    <div class="pill"><svg viewBox="0 0 24 24"><path d="M15.5 17.5A7 7 0 0 1 9.5 6a7 7 0 1 0 8.6 9.9 7 7 0 0 1-2.6 1.6z"/><path d="M15 4h4l-4 4h4"/></svg></div>
+    <div class="pill"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2.2"/><path d="M9 20h6M12 16.5V20M7.5 10.5h6M11 8l2.5 2.5L11 13"/></svg></div>
+    <div class="pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg></div>
+  </div>
+</header>
+<div id="hero"></div>
+<div id="rows"></div>
+<div id="panel-layer"><div class="scrim"></div><div class="panel"></div></div>
+
+<script>
+// ---- the demonstration content of Demo.java
+const SERVICES = [
+  {label: 'Netflix', color: '#E4E4E7'}, {label: 'HBO Max', color: '#3DD68C'}, {label: 'Globoplay', color: '#F5C451'},
+  {label: 'YouTube', color: '#E5484D'}, {label: 'Stremio', color: '#5B8DEF'},
+];
+const CONTINUE = [
+  ['Maré Alta', 1, 3, 17, 42, 'Uma vila de pescadores descobre que a maré guarda mais do que peixes.'],
+  ['O Último Farol', null, null, 31, 64, 'Dois irmãos atravessam o litoral para religar um farol esquecido.'],
+  ['Cidade de Vidro', 2, 5, 8, 81, 'Num futuro próximo, uma arquiteta desconfia dos prédios que projetou.'],
+  ['Ventos do Sul', 1, 7, 44, 23, 'Uma família de vinicultores enfrenta o inverno mais longo em décadas.'],
+  ['Noite Elétrica', null, null, 52, 35, 'Uma banda de garagem tem uma noite para provar que merece o palco.'],
+];
+const MORE = ['Órbita', 'Raízes', 'Horizonte', 'Correnteza', 'Silêncio no Vale', 'Antes da Chuva', 'Luz Baixa',
+  'Estação Final', 'Sal e Areia', 'Fio da Navalha'];
+const KEYS = [['Vermelho', '#E5484D', 'YouTube'], ['Verde', '#30A46C', 'HBO Max'], ['Amarelo', '#F5D90A', 'Globoplay'],
+  ['Azul', '#3E63DD', 'Stremio']];
+const APPS = [['Netflix', '#1A1A1D', '#E4E4E7'], ['HBO Max', '#1B1340', '#C9B8FF'], ['Globoplay', '#3A0F14', '#FF8A8A'],
+  ['YouTube', '#2A0E0E', '#FF6B6B'], ['Stremio', '#16163A', '#9DB4FF'], ['TV', '#0F2A24', '#7FE0C2'], ['Play Store', '#14231A', '#9BE3A8']];
+
+// ---- Demo.art, ported: sky gradient, two soft lights, two layers of hills, a vignette
+const PALETTES = [['#2B1B3D', '#E07A5F', '#F2CC8F'], ['#0B2545', '#13A3B5', '#8DE4E0'], ['#132A13', '#4F772D', '#ECF39E'],
+  ['#2D0A0A', '#C1440E', '#F4A259'], ['#0D0B1E', '#5B3FD1', '#E2A9F3'], ['#3D2B1F', '#B5838D', '#FFCDB2']];
+function rng(seed) { let a = seed * 7919 + 1; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function rgba(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; }
+function mix(h1, h2, t) { const a = parseInt(h1.slice(1), 16), b = parseInt(h2.slice(1), 16);
+  const c = [16, 8, 0].map(s => Math.round((a >> s & 255) + ((b >> s & 255) - (a >> s & 255)) * t));
+  return '#' + c.map(v => v.toString(16).padStart(2, '0')).join(''); }
+function paint(canvas, seed) {
+  const w = canvas.width, h = canvas.height, c = canvas.getContext('2d'), p = PALETTES[seed % PALETTES.length], r = rng(seed);
+  let g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, p[0]); g.addColorStop(1, mix(p[0], p[1], .55));
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  for (let i = 0; i < 2; i++) {
+    const cx = w * (.2 + .6 * r()), cy = h * (.25 + .35 * r()), rad = w * (.25 + .25 * r());
+    g = c.createRadialGradient(cx, cy, 0, cx, cy, rad);
+    g.addColorStop(0, rgba(p[2 - i], i ? .53 : .8)); g.addColorStop(1, rgba(p[2 - i], 0));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, rad, 0, Math.PI * 2); c.fill();
+  }
+  for (let layer = 0; layer < 2; layer++) {
+    const base = h * (.68 + .12 * layer);
+    c.beginPath(); c.moveTo(0, h); c.lineTo(0, base);
+    for (let x = 0; x <= w; x += w / 8) c.lineTo(x, base - h * .08 * r());
+    c.lineTo(w, h); c.closePath();
+    c.fillStyle = rgba(mix(p[0], '#000000', .3 * layer), layer ? .94 : .69); c.fill();
+  }
+  g = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * .75);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.6)'); c.fillStyle = g; c.fillRect(0, 0, w, h);
+}
+
+// ---- building blocks
+const el = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; };
+const gdot = (color) => `<span class="gdot" style="color:${color}"><i></i></span>`;
+const bar = (color, pct, width) => `<div class="bar" style="width:${width}px;color:${color}"><b style="width:${pct}%"></b></div>`;
+
+function contItem(i) {
+  const [title, s, e, left, pct, desc] = CONTINUE[i];
+  const se = s ? `T${s}:E${e}` : null;
+  return {title, service: i, seed: i, pct, left: `faltam ${left} min`, desc,
+    sub: se ? `${se} · faltam ${left} min` : `faltam ${left} min`, meta: se ? `Temporada ${s} · Episódio ${e}` : ''};
+}
+function card(it, focused) {
+  const svc = SERVICES[it.service];
+  const node = el(`<div class="card${focused ? ' focus' : ''}"><div class="thumb"><canvas width="640" height="360"></canvas>
+    <div class="badge" style="color:${svc.color};border-color:${rgba(svc.color, .4)}"><i></i><span style="color:#FAFAFA">${svc.label}</span></div>
+    ${it.pct ? bar(svc.color, it.pct, 288).replace('class="bar"', 'class="bar" ') : ''}</div>
+    <div class="ctitle">${it.title}</div><div class="csub">${it.sub}</div></div>`);
+  paint(node.querySelector('canvas'), it.seed);
+  return node;
+}
+function row(label, color, items, focusIndex) {
+  const block = el(`<div class="block"><div class="label">${color ? gdot(color) : ''}${label}</div><div class="strip"></div></div>`);
+  items.forEach((it, i) => block.querySelector('.strip').appendChild(card(it, i === focusIndex)));
+  return block;
+}
+function hero(it) {
+  const svc = SERVICES[it.service];
+  document.getElementById('hero').innerHTML = `
+    <div class="appline">${gdot(svc.color)}<span class="app">${svc.label}</span><span class="kind">· Continuar</span></div>
+    <div class="title">${it.title}</div>
+    ${it.meta ? `<div class="meta">${it.meta}</div>` : ''}
+    <div class="desc">${it.desc}</div>
+    <div class="progress">${bar(svc.color, it.pct, 260)}<span class="left">${it.left}</span></div>
+    <div class="hint"><span class="ok">OK</span><span>Continuar de onde parou</span></div>`;
+  paint(document.querySelector('#backdrop canvas'), it.seed);
+}
+function home() {
+  const rows = document.getElementById('rows');
+  const cont = CONTINUE.map((_, i) => contItem(i));
+  rows.appendChild(row('Continuar assistindo', null, cont.concat([{...contItem(0), title: MORE[4], seed: 30, service: 1, pct: 0, sub: 'HBO Max'}]), 0));
+  const recs = [cont[0]].concat([0, 1, 2, 3, 4].map(k => ({title: MORE[k], service: 0, seed: 10 + k, pct: 0, sub: 'Netflix'})));
+  rows.appendChild(row('Netflix', SERVICES[0].color, recs, -1));
+  hero(cont[0]);
+}
+function apps(focusIndex) {
+  document.body.classList.add('dark');
+  const block = el(`<div class="block"><div class="label">Apps</div><div class="grid"></div></div>`);
+  let line;
+  APPS.forEach(([name, bg, fg], i) => {
+    if (i % 6 === 0) { line = el('<div class="line"></div>'); block.querySelector('.grid').appendChild(line); }
+    line.appendChild(el(`<div class="tile${i === focusIndex ? ' focus' : ''}"><div class="art" style="background:linear-gradient(135deg, ${mix(bg, fg, .18)}, ${bg});color:${fg}">${name}</div>
+      <div class="name">${name}</div></div>`));
+  });
+  document.getElementById('rows').appendChild(block);
+}
+function panel(title, note, rowsHtml) {
+  document.body.classList.add('panel-open');
+  document.querySelector('.panel').innerHTML = `<div class="ptitle">${title}</div>${note ? `<div class="pnote">${note}</div>` : ''}
+    <div class="pcontent">${rowsHtml}</div>`;
+}
+const prow = (label, value, focused, dot) => `<div class="prow${focused ? ' focus' : ''}">${dot ? gdot(dot) : ''}<span class="grow">${label}</span>
+  ${value ? `<span class="value">${value}</span>` : ''}<span class="chev">›</span></div>`;
+
+const screen = location.hash.slice(1) || 'home';
+if (screen === 'apps') apps(0);
+else home();
+if (screen === 'ajustes') panel('Ajustes', null, prow('Ajustes da TV', null, true) + prow('Home', 'Linhas e apps') + prow('Botões do controle', 'Cores'));
+if (screen === 'botoes') panel('Botões do controle', 'O app que cada cor do controle abre',
+  KEYS.map(([name, color, app], i) => prow(name, app, i === 0, color)).join(''));
+if (screen === 'menu') panel('Maré Alta', 'Netflix · faltam 17 min', prow('Continuar assistindo', null, true) + prow('Remover de Continuar assistindo'));
+</script>
+</body>
+</html>

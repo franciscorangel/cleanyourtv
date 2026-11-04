@@ -2,14 +2,74 @@
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
 
-> **Este fork: edição Cinema para Sony BRAVIA (Brasil).** Além de tudo do projeto original, traz uma Home nova
-> ([`cinema/`](cinema/README.md)), os botões coloridos e Apps do controle abrindo apps sem root
-> ([`tvkeys/`](tvkeys/README.md)), um app de diagnóstico ([`tvprobe/`](tvprobe/README.md)) e o perfil
-> [`examples/sony-kd-65x755f`](examples/sony-kd-65x755f/README.md). Projeto original:
-> [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) (MIT).
->
-> *This fork adds a Cinema Home, remote colour-key remapping without root, a TV-provider probe and a Sony
-> KD-65X755F (Brazil) profile on top of the original project.*
+## Este fork: edição Cinema para Sony BRAVIA (Brasil)
+
+*English: this fork adds, on top of the original project, a new Home for Android TV (Cinema), the remote's
+colour and Apps keys opening apps without root, a TV-provider probe and a Sony KD-65X755F (Brazil) profile.
+Built and measured on a real KD-65X755F. Everything below the line is the original README.*
+
+Tudo do projeto original continua aqui. Em cima dele, este fork traz o que foi feito e medido numa
+Sony BRAVIA KD-65X755F (Android TV 9, Brasil):
+
+<p align="center"><img src="docs/cinema/home.png" alt="Home Cinema: destaque com fundo do título, Continuar assistindo e uma linha por streaming" width="800"></p>
+
+### O que foi feito
+
+| | O que é | Onde |
+|---|---|---|
+| **Home Cinema** | Uma Home nova: Continuar assistindo de **todos** os streamings (o último que você mexeu primeiro), uma linha por streaming com as recomendações do próprio app, fundo com a arte do título em destaque, grade de Apps e todos os ajustes num painel lateral. | [`cinema/`](cinema/README.md) |
+| **Botões do controle** | Vermelho, Verde, Amarelo e Azul abrem apps (você escolhe qual em Ajustes) e o botão Apps abre a grade de Apps. Sem root, com teste que se desfaz sozinho. | [`tvkeys/`](tvkeys/README.md) |
+| **Limpeza da KD-65X755F** | 28 pacotes desativados em dois lotes (rastreamento ACR, promoções, telemetria, modo hotel, demonstração), mantendo TV aberta ISDB-T, interatividade, HDMI-CEC, Chromecast, Assistente e Modo ambiente. | [`examples/sony-kd-65x755f`](examples/sony-kd-65x755f/README.md) |
+| **Sonda** | App que mostra o que cada app publica para a Home (Assistir a seguir, canais). | [`tvprobe/`](tvprobe/README.md) |
+
+Na Home Cinema:
+
+- **Segurar OK num título** do Continuar assistindo: continuar ou remover da lista (ele volta quando você assiste de novo).
+- **Segurar OK num app**: abrir, ocultar da Home, desinstalar ou desativar. A Play Store fica logo depois dos streamings.
+- **Topo**: Quadro (liga o Modo ambiente na hora), Desligar (temporizador da TV), Entradas (o seletor nativo) e Ajustes.
+- **Ajustes** em três telas: Ajustes da TV, Home (ordem das linhas, streamings, apps ocultos) e Botões do controle.
+- Navegação feita para o controle: para os lados nunca muda de linha; Cima/Baixo volta ao último card de cada linha; Voltar sobe um nível por vez.
+
+<p align="center">
+  <img src="docs/cinema/apps.png" alt="Grade de Apps no estilo da Cinema" width="49%">
+  <img src="docs/cinema/ajustes.png" alt="Painel de Ajustes com Ajustes da TV, Home e Botões do controle" width="49%">
+</p>
+<p align="center">
+  <img src="docs/cinema/menu-titulo.png" alt="Menu ao segurar OK num título: continuar ou remover" width="49%">
+  <img src="docs/cinema/botoes.png" alt="Botões do controle: o app de cada cor" width="49%">
+</p>
+
+### Ganho de performance
+
+Medido na própria TV (MediaTek MT5891, 2 GB) com [`tools/bench.py`](tools/bench.py) `--keys 36 --series 3`.
+
+**Home Cinema contra a Home original do Google:**
+
+| Medida | Home do Google | Home Cinema | Ganho |
+|---|---|---|---|
+| Abrir um app do zero | 919 ms | **330 ms** | 2,8× mais rápido |
+| Voltar para a Home (p50) | 205 ms | **72 ms** | 2,8× mais rápido |
+| CPU da Home parada | 9,8% | **0,1%** | ~100× menos |
+| Memória da Home | 124 MB | **88 MB** | −29% |
+| Quadros desenhados com a TV parada | n/d | **0** | |
+| Tempo por quadro, um toque (p50) | n/d | **18 ms** | |
+
+**Só a limpeza, ainda com a Home original:**
+
+| Medida | Antes | Depois |
+|---|---|---|
+| Quadros travados (jank) | 36,2% | **26,2%** |
+| Voltar para a Home (p50 / p95) | 205 / 359 ms | **171 / 299 ms** |
+| Memória da Home | 124 MB | **114 MB** |
+
+Como a Cinema fica leve: o fundo é uma imagem só, pré-composta (1280×720); os cantos arredondados são desenhados na
+própria imagem, sem recorte; as linhas fora de foco ficam em cache de GPU; nenhuma animação roda com a tela parada.
+
+As imagens acima são geradas a partir do layout da Cinema ([`docs/cinema/layout.html`](docs/cinema/layout.html), com as
+medidas, cores e fonte do app; `docs/cinema/render.sh` refaz os PNGs), com títulos e artes fictícios, para não mostrar
+histórico de ninguém nem capas de terceiros. Projeto original: [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) (MIT).
+
+---
 
 <p align="center">
   Read in: <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">正體中文</a> · <a href="README.vi.md">Tiếng Việt</a> · <a href="README.ja.md">日本語</a> · <a href="README.it.md">Italiano</a> · <a href="README.nl.md">Nederlands</a> · <a href="README.de.md">Deutsch</a> · <a href="README.uk.md">Українська</a> · <a href="README.tr.md">Türkçe</a>
